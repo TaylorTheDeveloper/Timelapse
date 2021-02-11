@@ -9,4 +9,12 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 storageConnectionString = os.getenv('TimelapseAzureStorage')
 cameraName = os.environ.get('TimelapseCameraName')
 
+if not cameraName:
+	print("missing cameraName env variable")
+	exit()
+
+if not storageConnectionString:
+	print("missing storageConnectionString env variable")
+	exit()
+
 print(cameraName)
