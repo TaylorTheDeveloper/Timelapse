@@ -10,13 +10,12 @@ storageConnectionString = os.getenv('TimelapseAzureStorage')
 captureSrcPath =  os.getenv('TimelapseCaptureSrcPath')
 useDatesInPath =  os.getenv('TimelapseUseDatesInPath')
 
-if not cameraName:
-	print("missing cameraName env variable")
-	exit()
-
 if not storageConnectionString:
 	print("missing storageConnectionString env variable")
 	exit()
+
+if not cameraName:
+	cameraName = "FooCam"
 
 if not blobContainer:
 	blobContainer = "timelapse-"

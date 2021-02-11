@@ -13,22 +13,21 @@ def UploadData(cameraName, srcFolder, destContainer, connectionString, time, use
 		print(iex)
 		container_client = blob_service_client.create_container(destContainer)
 
-	print("Pushing data to secure cloud storage: " + destContainer + "/" + cameraName + '\n')
-
 	onlyfiles = [f for f in listdir(srcFolder) if isfile(join(srcFolder, f))]
+
+	if len(onlyfiles) > 0:
+		print(f"Pushing data to secure cloud storage: {destContainer}/{cameraName}\n")
+
 	for fname in onlyfiles:
+		uploadSuccess = False
 		blobFileName = cameraName + "/" + fname
 
 		if useDatesInPath:
 			blobFileName = cameraName + "/"+ str(time.year) + "/"+ str(time.month) + "/"+ str(time.day) + "/" +fname
-			
-		print("\nUploading to Azure Storage as blob:\n\t" + srcFolder + fname)
-		print("\nBlob path:\n" + blobFileName)
-		uploadSuccess = False
-		blob_client = blob_service_client.get_blob_client(container=destContainer, blob=blobFileName)
 
 		with open(join(srcFolder, fname), "rb") as data:
 			try:
+				blob_client = blob_service_client.get_blob_client(container=destContainer, blob=blobFileName)
 				blob_client.upload_blob(data, overwrite=True)
 				uploadSuccess = True
 			except Exception as nex:
@@ -39,7 +38,7 @@ def UploadData(cameraName, srcFolder, destContainer, connectionString, time, use
 
 def CaptureImage(srcFolder, time):
 	try:
-		cmd = f'raspistill -o ./capture/{time:%Y-%B-%d}-{time.timestamp()}.jpg -q 100 -t 1'
+		cmd = f'raspistill -o {srcFolder}{time:%Y-%B-%d}-{time.timestamp()}.jpg -q 100 -t 1'
 		os.system(cmd)
 		print(cmd)
 	except Exception as ex:
