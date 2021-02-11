@@ -6,6 +6,9 @@ import datetime
 import calendar
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
+scriptStartTime = datetime.datetime.utcnow()
+###
+
 storageConnectionString = os.getenv('TimelapseAzureStorage')
 cameraName = os.environ.get('TimelapseCameraName')
 
@@ -18,3 +21,9 @@ if not storageConnectionString:
 	exit()
 
 print(cameraName)
+
+###
+scriptEndTime = datetime.datetime.utcnow()
+runtime = scriptEndTime - scriptStartTime
+
+print(f'Complete. Runtime: {runtime.total_seconds()}')
