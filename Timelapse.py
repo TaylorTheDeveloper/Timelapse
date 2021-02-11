@@ -8,6 +8,7 @@ cameraName = os.environ.get('TimelapseCameraName')
 blobContainer = os.environ.get('TimelapseAzureBlobContainer')
 storageConnectionString = os.getenv('TimelapseAzureStorage')
 captureSrcPath =  os.getenv('TimelapseCaptureSrcPath')
+useDatesInPath =  os.getenv('TimelapseUseDatesInPath')
 
 if not cameraName:
 	print("missing cameraName env variable")
@@ -23,6 +24,9 @@ if not blobContainer:
 if not captureSrcPath:
 	captureSrcPath = "./capture/"
 
+if not useDatesInPath:
+	useDatesInPath = False
+
 if not os.path.isdir(captureSrcPath):
 	os.mkdir(captureSrcPath)
 
@@ -30,4 +34,4 @@ container_name = (blobContainer + month).lower()
 
 CaptureImage(captureSrcPath, time)
 
-UploadData(cameraName, captureSrcPath, container_name, storageConnectionString)
+UploadData(cameraName, captureSrcPath, container_name, storageConnectionString, time, useDatesInPath)

@@ -3,7 +3,7 @@ from os import listdir
 from os.path import isfile, join
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
-def UploadData(cameraName, srcFolder, destContainer, connectionString):
+def UploadData(cameraName, srcFolder, destContainer, connectionString, time, useDatesInPath):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
 		blob_service_client = BlobServiceClient.from_connection_string(connectionString)
@@ -17,9 +17,15 @@ def UploadData(cameraName, srcFolder, destContainer, connectionString):
 
 	onlyfiles = [f for f in listdir(srcFolder) if isfile(join(srcFolder, f))]
 	for fname in onlyfiles:
+		blobFileName = cameraName + "/" + fname
+
+		if useDatesInPath:
+			blobFileName = cameraName + "/"+ str(time.year) + "/"+ str(time.month) + "/"+ str(time.day) + "/" +fname
+			
 		print("\nUploading to Azure Storage as blob:\n\t" + srcFolder + fname)
+		print("\nBlob path:\n" + blobFileName)
 		uploadSuccess = False
-		blob_client = blob_service_client.get_blob_client(container=destContainer, blob=cameraName + "/" +fname)
+		blob_client = blob_service_client.get_blob_client(container=destContainer, blob=blobFileName)
 
 		with open(join(srcFolder, fname), "rb") as data:
 			try:
