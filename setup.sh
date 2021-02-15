@@ -30,9 +30,6 @@ raspi-config nonint do_wifi_country $countryCode &> /dev/null
 # Set Wifi
 echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
 
-# Set cron job (warning this will also clear your crontab of other jobs update '>' to '>>' to append)
-echo "$frequency /usr/bin/python3 /home/pi/Timelapse/Timelapse.py > /home/pi/out.txt" > /var/spool/cron/crontabs/root
-
 # Reboot
 sync
 reboot
