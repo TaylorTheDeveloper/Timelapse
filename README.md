@@ -31,7 +31,6 @@ Optionally if internet is already enabled on device:
 `*Log in*`  
 `sudo -i`  
 `./Timelapse/installTimelapse.sh`  
-`
 
 # Remarks:
 Cron is your friend! Two things to know:
