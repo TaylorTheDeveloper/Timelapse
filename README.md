@@ -2,14 +2,11 @@
 Timelapse camera system using azure.
 
 Installation:
+This guide will help you set up your timelapse camera. Most steps have been automated.
 
-If your setting up a pi from scratch, use:
-
-setup.sh
-
-If you already have wifi/ethernet enabled, use:
-
-setup-skipwifi.sh
+Do note: 
+If you want to configure wireless during setip, call 'setup.sh wifi'
+If you already have internet access, just call 'setup.sh'
 
 1. Log into pi
 2. Copy files from usb or download them from git

@@ -9,7 +9,7 @@ pip3 install azure-storage-blob
 env >> /etc/environment
 
 # Setup cron job
-crobtab -e root &> /dev/null
+crontab -e root &> /dev/null
 (crontab -l ; echo "$TimelapseCameraFrequency /usr/bin/python3 /root/Timelapse/Timelapse.py > /root/out.txt") | sort - | uniq - | crontab -
 
 
