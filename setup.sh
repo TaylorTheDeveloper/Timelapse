@@ -11,6 +11,7 @@ layout=us
 enableSSH=0
 enableCamera=0
 wifiCountryCode=US
+enableWifi=$1
 
 # Set keyboard layout and locale
 raspi-config nonint do_change_locale $locale &> /dev/null
@@ -26,7 +27,7 @@ raspi-config nonint do_camera $enableCamera
 raspi-config nonint do_hostname $cameraName
 
 # Wifi setup
-if [ ! -z $1 ]
+if [ ! -z $enableWifi ]
 then
 # Enable wifi country
 raspi-config nonint do_wifi_country $wifiCountryCode &> /dev/null
