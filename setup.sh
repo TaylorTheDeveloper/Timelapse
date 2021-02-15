@@ -32,8 +32,8 @@ raspi-config nonint do_wifi_country $countryCode &> /dev/null
 echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
 
 # Set environment variables
-echo -en "export TimelapseCameraName='$cameraName'\n" >> /home/root/.bashrc
-echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /home/root/.bashrc
+echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
+echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 
 # Reboot
 sync
