@@ -29,19 +29,12 @@ countryCode=US
 raspi-config nonint do_wifi_country $countryCode &> /dev/null
 
 # Set Wifi if pass any flag  to this scrip
-tlinuxif [ -z $1 ]
-then
-else
 echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
-fi
 
 # Set environment variables
 echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
-
-# Expose variables to cron job
-env >> /etc/environment
 
 # Reboot
 sync
