@@ -1,6 +1,7 @@
 import os
 import datetime
 from Utilities import CaptureImage, UploadData
+print("started")
 
 time = datetime.datetime.now()
 month = time.strftime("%B")
@@ -34,3 +35,4 @@ container_name = (blobContainer + month).lower()
 CaptureImage(captureSrcPath, time)
 
 UploadData(cameraName, captureSrcPath, container_name, storageConnectionString, time, useDatesInPath)
+print("ended")
