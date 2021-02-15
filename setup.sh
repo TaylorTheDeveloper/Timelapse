@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Setting
+# Configuration
 ssid=""
 passphrase=""
 azureStorageConnectionString=""
-frequency="*/1 * * * *" #cron frequency
+frequency="*/1 * * * *"
 cameraName="timelapsecam"
 locale=en_US.UTF-8
 layout=us
@@ -37,7 +37,7 @@ echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /ro
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
 
 # Expose variables to cron job
-echo env >> /env/environment
+echo env >> /etc/environment
 
 # Reboot
 sync

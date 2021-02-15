@@ -13,12 +13,19 @@ setup-skipwifi.sh
 
 1. Log into pi
 2. Copy files from usb or download them from git
-3. Ensure line endings are correct with "sed -i -e 's/\r$//' *" from the root project directory. 
-4. Once you have the files, run the './setup-*.sh' script to set up the pi.
+3. If using usb, you can find the device path to mount using 'sudo fdisk -l'
+3. If using usb, you can copy the files using 'sudo mount /dev/sdb1 /media; cp -r /media/Timelapse /home/pi/'
+4. If using internet, you can clone the repo using git. 
+3. Ensure line endings are correct with "sed -i -e 's/\r$//' *" from the root project directory after cloning. 
+3. Configure the setup script to include your required storage account settings, your wifi information, and optional configurations. 
+4. Once compelte, run the './setup-*.sh' script to set up the pi device for Timelapse work.
 5. Setup will enable all the pi features you need, set environment variables, and reboot the device
-6. After reboot, run './installTimelapse.sh' to get required software dependancies and install the Timelapse cron job
+6. After reboot, enter sudo -i again
+7. Then run './installTimelapse.sh' to get required software dependancies and install the Timelapse cron job on your system
 
 Remarks:
+My raspberry pi's usually come with EN_GB as the default keyboard layout. It's very difficult to enter '\' without first going through the raspi-config setup (which this automates). If you need to type '\' before running setup you can do so with by '(HOLD LEFT ALT) + NUM9 + NUM2'. If you don't have a numpad, this doesn't work. 
+
 Environment variables were used in the setup. If you want to change the job frequency after setup has been complete, you will need to modify the root crontab.
 
 Often I work cross platform. Line endings may need to be fixed before you run the software. This is easily done in linux from the root of the project directory with "sed -i -e 's/\r$//' *"
