@@ -3,6 +3,7 @@
 # Setting
 ssid=""
 passphrase=""
+azureStorageConnectionString=""
 frequency="*/1 * * * *" #cron frequency
 cameraName="timelapsecam"
 locale=en_US.UTF-8
@@ -29,6 +30,10 @@ raspi-config nonint do_wifi_country $countryCode &> /dev/null
 
 # Set Wifi
 echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
+
+# Set environment variables
+echo -en "export TimelapseCameraName='$cameraName'\n" >> /home/root/.bashrc
+echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /home/root/.bashrc
 
 # Reboot
 sync
