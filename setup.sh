@@ -36,6 +36,9 @@ echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
 
+# Expose variables to cron job
+echo env >> /env/environment
+
 # Reboot
 sync
 reboot
