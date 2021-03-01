@@ -50,7 +50,7 @@ def CaptureImage(srcFolder, time):
 
 def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
-	changes = False
+	changesRequireRestart = False
 
 	with open(filename, "rb") as data:
 		content = data.read().decode()
@@ -61,24 +61,43 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		print(configSettings["cameraname"])
 		configLines = list()
 
+		# Bashrc Update for Environment variables
 		with open("/root/.bashrc", "rb") as data:
 			configLines = data.readlines()
 
 		for line in configLines:
 			decoded = line.decode()
 			if ("TimelapseCameraName" in decoded and not configSettings["cameraname"] in decoded):				
-				print(decoded)
 				idx = configLines.index(line)
-				#decoded = configLines[idx].decode()
 				eqlidx = decoded.index("=")
-				configLines[idx] = (decoded[:eqlix + 1] + "\'" + configSettings["cameraname"] +"\'").encode()
-				print(configLines[idx].decode())
-				changes = True
+				configLines[idx] = (decoded[:eqlidx + 1] + "\'" + configSettings["cameraname"] +"\'\n").encode()
+				changesRequireRestart = True
 
 		with open("/root/.bashrc", "wb") as bashrc:
 			bashrc.writelines(configLines)
 
-		if changes:
+
+		# Update for environment file for cron job
+		configLines = list()
+		with open("/etc/environment", "rb") as data:
+			configLines = data.readlines()
+
+		for line in configLines:
+			decoded = line.decode()
+			if ("TimelapseCameraName" in decoded and not configSettings["cameraname"] in decoded):				
+				idx = configLines.index(line)
+				eqlidx = decoded.index("=")
+				configLines[idx] = (decoded[:eqlidx + 1] + configSettings["cameraname"] +"\n").encode()
+
+				hostcmd = "raspi-config nonint do_hostname " + configSettings["cameraname"]
+				os.system(hostcmd)
+
+				changesRequireRestart = True
+
+		with open("/etc/environment", "wb") as bashrc:
+			bashrc.writelines(configLines)
+
+		if changesRequireRestart:
 			os.system("reboot now")
 
 def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
@@ -117,8 +136,6 @@ def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, c
 		print("Cloud configuration")
 		return;
 
-	print("No Cloud configuration exists")
-
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
 		blob_service_client = BlobServiceClient.from_connection_string(connectionString)
@@ -127,6 +144,16 @@ def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, c
 	except Exception as iex:
 		print(iex)
 		container_client = blob_service_client.create_container(metadataContainer)
+
+	try:
+		blob_client = blob_service_client.get_blob_client(container=metadataContainer, blob=filename)
+
+		# if config exists return
+		if blob_client.exists():
+			print("Cloud configuration exist on server... downloading")
+			return;
+	except Exception as iex:
+		print(iex)
 
 	cameraConfig = CameraCloudConfiguration(deviceId, cameraName)
 
