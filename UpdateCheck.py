@@ -1,6 +1,6 @@
 import os
 import datetime
-from Utilities import SetDeviceCloudConfiguration,GetDeviceCloudConfiguration
+from Utilities import SetDeviceCloudConfiguration, GetDeviceCloudConfiguration, InstallDeviceCloudConfiguration
 
 time = datetime.datetime.now()
 deviceId = os.environ.get('TimelapseCameraDeviceId')
@@ -11,3 +11,5 @@ storageConnectionString = os.getenv('TimelapseAzureStorage')
 SetDeviceCloudConfiguration(metaBlobContainer, storageConnectionString, deviceId, cameraName)
 
 GetDeviceCloudConfiguration(metaBlobContainer, storageConnectionString, deviceId)
+
+InstallDeviceCloudConfiguration(deviceId)

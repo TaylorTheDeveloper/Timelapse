@@ -48,6 +48,17 @@ def CaptureImage(srcFolder, time):
 		print("Failed to capture image")
 		print(ex)
 
+def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
+	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
+
+	with open(filename, "rb") as data:
+		content = data.read().decode()
+		print(content)
+		configSettings = json.loads(content)
+
+		# Setting
+		print(configSettings[cameraname])
+
 def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
