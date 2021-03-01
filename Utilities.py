@@ -1,6 +1,8 @@
 import os
 from os import listdir
 from os.path import isfile, join
+import os.path
+from os import path
 import json
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
@@ -46,7 +48,6 @@ def CaptureImage(srcFolder, time):
 		print("Failed to capture image")
 		print(ex)
 
-
 def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
@@ -75,7 +76,16 @@ def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, s
 	else:
 		print(f"Cloud configuration not synced: {deviceId}")
 
-def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, cameraName, srcFolder="./"):
+def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, cameraName, srcFolder="./"):	
+	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
+
+	# if config exists return
+	if path.isfile(filename):
+		print("Cloud configuration")
+		return;
+
+	print("No Cloud configuration exists")
+
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
 		blob_service_client = BlobServiceClient.from_connection_string(connectionString)
@@ -88,8 +98,6 @@ def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, c
 	cameraConfig = CameraCloudConfiguration(deviceId, cameraName)
 
 	configContent = json.dumps(cameraConfig.__dict__)
-
-	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
 
 	file = open(filename, "w")
 	file.write(configContent)
