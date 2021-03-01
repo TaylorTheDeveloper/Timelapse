@@ -46,6 +46,35 @@ def CaptureImage(srcFolder, time):
 		print("Failed to capture image")
 		print(ex)
 
+
+def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
+	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
+	try:
+		blob_service_client = BlobServiceClient.from_connection_string(connectionString)
+		container_client = blob_service_client.get_container_client(metadataContainer)
+		container_client.get_container_properties()
+	except Exception as iex:
+		print(iex)
+		container_client = blob_service_client.create_container(metadataContainer)
+
+	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
+
+	downloadSuccess = False
+
+	try:
+		blob_client = blob_service_client.get_blob_client(container=metadataContainer, blob=filename)
+		with open(filename, "wb") as download_file:
+			download_file.write(blob_client.download_blob().readall())
+
+		downloadSuccess = True
+	except Exception as nex:
+		print(nex)
+
+	if downloadSuccess:
+		print(f"Cloud configuration synced: {deviceId}")
+	else:
+		print(f"Cloud configuration not synced: {deviceId}")
+
 def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, cameraName, srcFolder="./"):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
