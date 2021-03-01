@@ -133,7 +133,7 @@ def SetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, c
 
 	# if config exists return
 	if path.isfile(filename):
-		print("Cloud configuration")
+		print("Cloud configuration local file exists")
 		return;
 
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
