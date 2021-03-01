@@ -5,6 +5,7 @@ ssid=""
 passphrase=""
 azureStorageConnectionString=""
 frequency="*/1 * * * *"
+cloudUpdateFrequency="*/5 * * * *"
 cameraName="timelapsecam"
 locale=en_US.UTF-8
 layout=us
@@ -40,6 +41,13 @@ fi
 echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
+echo -en "export TimelapseCameraCloudUpdateFrequency='$cloudUpdateFrequency'\n" >> /root/.bashrc
+
+if [[ -z "$TimelapseCameraDeviceId" ]]
+then
+  uuid=$(uuidgen)
+  echo -en "export TimelapseCameraDeviceId='$uuid'\n" >> /root/.bashrc
+fi
 
 # Reboot
 sync
