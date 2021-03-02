@@ -1,6 +1,6 @@
 import os
 import datetime
-from Utilities import SetDeviceCloudConfiguration, GetDeviceCloudConfiguration, InstallDeviceCloudConfiguration
+from Utilities import SetDeviceCloudConfiguration, SyncDeviceCloudConfiguration, InstallDeviceCloudConfiguration
 
 time = datetime.datetime.now()
 deviceId = os.environ.get('TimelapseCameraDeviceId')
