@@ -45,7 +45,16 @@ def CaptureImage(srcFolder, time, deviceId):
 		print(config.deviceid)
 		print(config.cameraname)
 
-		options = '-q 100 --timeout 1 --nopreview'
+		options = '-q 100 --timeout 1 --nopreview '
+		options += f'--sharpness {config.sharpness} '
+		options += f'--contrast {config.contrast} '
+		options += f'--brightness {config.brightness} '
+		options += f'--saturation {config.saturation} '
+		options += f'--ISO {config.ISO} '
+		options += f'--exposure {config.exposure} '
+		options += f'--flicker {config.flicker} '
+		options += f'--awb {config.autowhitebalance} '
+
 		outputfilename = f'-o {srcFolder}{time:%Y-%B-%d}-{time.timestamp()}.jpg '
 		cmd = 'raspistill ' + outputfilename + options
 		os.system(cmd)
