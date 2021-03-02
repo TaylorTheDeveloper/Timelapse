@@ -81,55 +81,63 @@ def GetDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	return Dict2Obj(configSettings)
 
 def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
-	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
+	config = GetDeviceCloudConfiguration(deviceId)
+	updateHostname = False
 	changesRequireRestart = False
 
-	with open(filename, "rb") as data:
-		content = data.read().decode()
-		print(content)
-		configSettings = json.loads(content)
+	# Setting
+	print(config.cameraname)
+	configLines = list()
 
-		# Setting
-		print(configSettings["cameraname"])
-		configLines = list()
+	# Bashrc Update for Environment variables
+	with open("/root/.bashrc", "rb") as data:
+		configLines = data.readlines()
 
-		# Bashrc Update for Environment variables
-		with open("/root/.bashrc", "rb") as data:
-			configLines = data.readlines()
+	for line in configLines:
+		decoded = line.decode()
+		if ("TimelapseCameraName" in decoded and not config.cameraname in decoded):				
+			BashUpdate(configLines, line, decoded, "TimelapseCameraName", config.cameraname)
+			changesRequireRestart = True
+			updateHostname = True
 
-		for line in configLines:
-			decoded = line.decode()
-			if ("TimelapseCameraName" in decoded and not configSettings["cameraname"] in decoded):				
-				idx = configLines.index(line)
-				eqlidx = decoded.index("=")
-				configLines[idx] = (decoded[:eqlidx + 1] + "\'" + configSettings["cameraname"] +"\'\n").encode()
-				changesRequireRestart = True
+	with open("/root/.bashrc", "wb") as bashrc:
+		bashrc.writelines(configLines)
 
-		with open("/root/.bashrc", "wb") as bashrc:
-			bashrc.writelines(configLines)
+	# Update for environment file for cron job
+	configLines = list()
+	with open("/etc/environment", "rb") as data:
+		configLines = data.readlines()
 
-		# Update for environment file for cron job
-		configLines = list()
-		with open("/etc/environment", "rb") as data:
-			configLines = data.readlines()
+	for line in configLines:
+		decoded = line.decode()
+		if ("TimelapseCameraName" in decoded and not config.cameraname in decoded):				
+			EnvUpdate(configLines, line, decoded, "TimelapseCameraName", config.cameraname)
+			changesRequireRestart = True
+			updateHostname = True
 
-		for line in configLines:
-			decoded = line.decode()
-			if ("TimelapseCameraName" in decoded and not configSettings["cameraname"] in decoded):				
-				idx = configLines.index(line)
-				eqlidx = decoded.index("=")
-				configLines[idx] = (decoded[:eqlidx + 1] + configSettings["cameraname"] +"\n").encode()
+	with open("/etc/environment", "wb") as bashrc:
+		bashrc.writelines(configLines)
 
-				hostcmd = "raspi-config nonint do_hostname " + configSettings["cameraname"]
-				os.system(hostcmd)
+	if updateHostname:
+		hostcmd = "raspi-config nonint do_hostname " + config.cameraname
+		os.system(hostcmd)
+		changesRequireRestart = True
 
-				changesRequireRestart = True
+	if changesRequireRestart:
+		os.system("reboot now")
 
-		with open("/etc/environment", "wb") as bashrc:
-			bashrc.writelines(configLines)
+def BashUpdate(configLines, line, decoded, ckey, cvalue):
+	if (ckey in decoded and not cvalue in decoded):				
+		idx = configLines.index(line)
+		eqlidx = decoded.index("=")
+		configLines[idx] = (decoded[:eqlidx + 1] + "\'" + cvalue +"\'\n").encode()
 
-		if changesRequireRestart:
-			os.system("reboot now")
+def EnvUpdate(configLines, line, decoded, ckey, cvalue):
+	if (ckey in decoded and not cvalue in decoded):	
+		idx = configLines.index(line)
+		eqlidx = decoded.index("=")
+		configLines[idx] = (decoded[:eqlidx + 1] + cvalue +"\n").encode()
+
 
 def SyncDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
