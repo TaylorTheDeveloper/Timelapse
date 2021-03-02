@@ -39,14 +39,29 @@ def UploadData(cameraName, srcFolder, destContainer, connectionString, time, use
 		if uploadSuccess:
 			os.remove(join(srcFolder, fname))
 
-def CaptureImage(srcFolder, time):
+def CaptureImage(srcFolder, time, deviceId):
 	try:
-		cmd = f'raspistill -o {srcFolder}{time:%Y-%B-%d}-{time.timestamp()}.jpg -q 100 -t 1'
+		config = GetDeviceCloudConfiguration(deviceId)
+		print(config["deviceid"])
+		print(config["cameraname"])
+
+		options = '-q 100 --timeout 1 --nopreview'
+		outputfilename = f'-o {srcFolder}{time:%Y-%B-%d}-{time.timestamp()}.jpg '
+		cmd = 'raspistill ' + outputfilename + options
 		os.system(cmd)
 		print(cmd)
 	except Exception as ex:
 		print("Failed to capture image")
 		print(ex)
+
+def GetDeviceCloudConfiguration(deviceId, srcFolder="./"):
+	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
+	configSettings = None
+	with open(filename, "rb") as data:
+		content = data.read().decode()
+		configSettings = json.loads(content)
+
+	return configSettings
 
 def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
@@ -76,7 +91,6 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		with open("/root/.bashrc", "wb") as bashrc:
 			bashrc.writelines(configLines)
 
-
 		# Update for environment file for cron job
 		configLines = list()
 		with open("/etc/environment", "rb") as data:
@@ -100,7 +114,7 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		if changesRequireRestart:
 			os.system("reboot now")
 
-def GetDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
+def SyncDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
 	# see: https://stackoverflow.com/questions/59170504/create-blob-container-in-azure-storage-if-it-is-not-exists
 	try:
 		blob_service_client = BlobServiceClient.from_connection_string(connectionString)

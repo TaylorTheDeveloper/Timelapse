@@ -10,6 +10,6 @@ storageConnectionString = os.getenv('TimelapseAzureStorage')
 
 SetDeviceCloudConfiguration(metaBlobContainer, storageConnectionString, deviceId, cameraName)
 
-GetDeviceCloudConfiguration(metaBlobContainer, storageConnectionString, deviceId)
+SyncDeviceCloudConfiguration(metaBlobContainer, storageConnectionString, deviceId)
 
 InstallDeviceCloudConfiguration(deviceId)
