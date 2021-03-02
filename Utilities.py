@@ -204,3 +204,11 @@ class CameraCloudConfiguration(object):
     def __init__(self, deviceId, cameraName):
         self.deviceid = deviceId
         self.cameraname = cameraName
+        self.sharpness = 0 # -100 to 100
+        self.contrast = 0 # -100 to 100
+        self.brightness = 50 # 0 to 100
+        self.saturation = 0 # -100 to 100
+        self.ISO = 100 # 100 to 3200
+        self.exposure = "auto" # off,auto,night,nightpreview,backlight,spotlight,sports,snow,beach,verylong,fixedfps,antishake,fireworks
+        self.flicker = "auto" # off,auto,50hz,60hz
+        self.autowhitebalance = "auto" # off,auto,sun,cloud,shade,tungsten,fluorescent,incandescent,flash,horizon,greyworld
