@@ -86,7 +86,6 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	changesRequireRestart = False
 
 	# Setting
-	print(config.cameraname)
 	configLines = list()
 
 	# Bashrc Update for Environment variables
@@ -136,7 +135,7 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		changesRequireRestart = True
 
 	if changesRequireRestart:
-		# Note cronjobs must finish installing after reboot
+		# Note cronjobs will finish installing after reboot
 		os.system("reboot now")
 
 def BashUpdate(configLines, line, decoded, ckey, cvalue):
