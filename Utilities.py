@@ -99,6 +99,12 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 			BashUpdate(configLines, line, decoded, "TimelapseCameraName", config.cameraname)
 			changesRequireRestart = True
 			updateHostname = True
+		if ("TimelapseCameraFrequency" in decoded and not config.timelapsefrequency in decoded):				
+			BashUpdate(configLines, line, decoded, "TimelapseCameraFrequency", config.timelapsefrequency)
+			changesRequireRestart = True
+		if ("TimelapseCameraCloudUpdateFrequency" in decoded and not config.cloudconfigupdatefrequency in decoded):				
+			BashUpdate(configLines, line, decoded, "TimelapseCameraCloudUpdateFrequency", config.cloudconfigupdatefrequency)
+			changesRequireRestart = True
 
 	with open("/root/.bashrc", "wb") as bashrc:
 		bashrc.writelines(configLines)
@@ -114,6 +120,12 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 			EnvUpdate(configLines, line, decoded, "TimelapseCameraName", config.cameraname)
 			changesRequireRestart = True
 			updateHostname = True
+		if ("TimelapseCameraFrequency" in decoded and not config.timelapsefrequency in decoded):				
+			EnvUpdate(configLines, line, decoded, "TimelapseCameraFrequency", config.timelapsefrequency)
+			changesRequireRestart = True
+		if ("TimelapseCameraCloudUpdateFrequency" in decoded and not config.cloudconfigupdatefrequency in decoded):				
+			EnvUpdate(configLines, line, decoded, "TimelapseCameraCloudUpdateFrequency", config.cloudconfigupdatefrequency)
+			changesRequireRestart = True
 
 	with open("/etc/environment", "wb") as bashrc:
 		bashrc.writelines(configLines)
@@ -124,6 +136,7 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		changesRequireRestart = True
 
 	if changesRequireRestart:
+		# Note cronjobs must finish installing after reboot
 		os.system("reboot now")
 
 def BashUpdate(configLines, line, decoded, ckey, cvalue):
@@ -221,6 +234,8 @@ class CameraCloudConfiguration(object):
     def __init__(self, deviceId, cameraName):
         self.deviceid = deviceId
         self.cameraname = cameraName
+        self.timelapsefrequency = "*/1 * * * *"
+        self.cloudconfigupdatefrequency = "*/5 * * * *"
         self.sharpness = 0 # -100 to 100
         self.contrast = 0 # -100 to 100
         self.brightness = 50 # 0 to 100

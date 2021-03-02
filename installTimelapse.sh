@@ -9,9 +9,11 @@ pip3 install azure-storage-blob
 # Expose environment variables to cron job
 env >> /etc/environment
 
-# Setup cron job
+# Setup cron jobs
+crontab -l | grep -v '/usr/bin/python3 /root/Timelapse/'  | crontab -
 crontab -e root &> /dev/null
-(crontab -l ; echo "$TimelapseCameraFrequency /usr/bin/python3 /root/Timelapse/Timelapse.py > /root/out.txt") | sort - | uniq - | crontab -
-(crontab -l ; echo "$TimelapseCameraCloudUpdateFrequency /usr/bin/python3 /root/Timelapse/UpdateCheck.py > /root/updatecheck.txt") | sort - | uniq - | crontab -
+(crontab -l ; echo "$TimelapseCameraFrequency /usr/bin/python3 /root/Timelapse/Timelapse.py > /root/cameralog.txt") | sort - | uniq - | crontab -
+(crontab -l ; echo "$TimelapseCameraCloudUpdateFrequency /usr/bin/python3 /root/Timelapse/UpdateCheck.py > /root/updatechecklog.txt") | sort - | uniq - | crontab -
+(crontab -l ; echo "@reboot /root/Timelapse/installTimelapse.py > /root/bootlog.txt") | sort - | uniq - | crontab -
 
 
