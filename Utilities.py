@@ -42,8 +42,8 @@ def UploadData(cameraName, srcFolder, destContainer, connectionString, time, use
 def CaptureImage(srcFolder, time, deviceId):
 	try:
 		config = GetDeviceCloudConfiguration(deviceId)
-		print(config["deviceid"])
-		print(config["cameraname"])
+		print(config.deviceid)
+		print(config.cameraname)
 
 		options = '-q 100 --timeout 1 --nopreview'
 		outputfilename = f'-o {srcFolder}{time:%Y-%B-%d}-{time.timestamp()}.jpg '
@@ -54,6 +54,14 @@ def CaptureImage(srcFolder, time, deviceId):
 		print("Failed to capture image")
 		print(ex)
 
+class Dict2Obj(object):
+	def __init__(self, dictionary):
+		for key in dictionary:
+			setattr(self, key, dictionary[key])
+
+	def __repr__(self):
+		return "<dict2obj: %s="">" % self.__dict__
+
 def GetDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
 	configSettings = None
@@ -61,7 +69,7 @@ def GetDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		content = data.read().decode()
 		configSettings = json.loads(content)
 
-	return configSettings
+	return Dict2Obj(configSettings)
 
 def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 	filename = join(srcFolder, f"deviceconfig-{deviceId}.json")
