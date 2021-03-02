@@ -1,16 +1,16 @@
 # IoT Timelapse Camera
 IoT Timelapse camera system using azure.
 
-# Installation:
+## Installation:
 This guide will help you set up your timelapse camera in a few minutes. 
 You will need to attach either a usb or raspberry pi native camera do the device.
 Most steps have been automated. Follow the below steps on the device you wish to make a timelapse camera.
 After installTimelapse.sh is complete, the camera will automatically snap and save pictures to azure for your timelapses whenever it has a power source. 
 
-# Cloud Configuration
+## Cloud Configuration
 The device will set itself up with a device id and create a device configuration in the cloud. Settings can be accessed via `CameraCloudConfiguration`.
 
-Full local setup:  
+## Full local setup:  
 `*Log in*`  
 `passwd pi # optional but recommend changing password`  
 `sudo -i`  
@@ -22,7 +22,7 @@ Full local setup:
 `sudo -i`  
 `./Timelapse/installTimelapse.sh`  
 
-Optionally if internet is already enabled on device:  
+## Optionally if internet is already enabled on device:  
 `*Log in*`  
 `passwd pi # optional but recommend changing password`  
 `sudo -i`  
