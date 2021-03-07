@@ -49,9 +49,6 @@ then
   echo -en "export TimelapseCameraDeviceId='$uuid'\n" >> /root/.bashrc
 fi
 
-# Kick off install on reboot
-(crontab -l ; echo "@reboot /root/Timelapse/installTimelapse.sh > /root/bootlog.txt") | sort - | uniq - | crontab -
-
 # Reboot
 sync
 reboot
