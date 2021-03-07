@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Install software prerequisites
+# Update and install pip, uuid runtime
+apt-get update
+apt install -y python3-pip
 pip3 install azure-storage-blob
 
 # Expose environment variables to cron job
