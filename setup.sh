@@ -6,7 +6,7 @@ passphrase=""
 azureStorageConnectionString=""
 frequency="*/1 * * * *"
 cloudUpdateFrequency="*/5 * * * *"
-cameraName="timelapsecam"
+cameraName="timelapsecam1"
 locale=en_US.UTF-8
 layout=us
 enableSSH=0
@@ -37,6 +37,11 @@ raspi-config nonint do_wifi_country $wifiCountryCode &> /dev/null
 echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 
+# Update and install pip, uuid runtime
+apt-get update
+apt install -y python3-pip
+apt install -y uuid-runtime
+
 # Set environment variables
 echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
@@ -48,6 +53,9 @@ then
   uuid=$(uuidgen)
   echo -en "export TimelapseCameraDeviceId='$uuid'\n" >> /root/.bashrc
 fi
+
+# Kick off install on reboot
+(crontab -l ; echo "@reboot /root/Timelapse/installTimelapse.sh > /root/bootlog.txt") | sort - | uniq - | crontab -
 
 # Reboot
 sync
