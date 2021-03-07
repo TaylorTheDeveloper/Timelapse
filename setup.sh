@@ -14,6 +14,23 @@ enableCamera=0
 wifiCountryCode=US
 enableWifi=$1
 
+# Wifi setup
+if [ ! -z $enableWifi ]
+then
+# Enable wifi country
+raspi-config nonint do_wifi_country $wifiCountryCode &> /dev/null
+
+# Set Wifi if pass any flag  to this script
+echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
+fi
+
+while [ "$(hostname -I)" = "" ]; do
+  echo -e "\nWaiting for network connection..."
+  sleep 1
+done
+
+echo "\nNetwork connection established";
+
 # Set keyboard layout and locale
 raspi-config nonint do_change_locale $locale &> /dev/null
 raspi-config nonint do_configure_keyboard $layout &> /dev/null
@@ -26,16 +43,6 @@ raspi-config nonint do_camera $enableCamera
 
 # Set hostname from environment variable
 raspi-config nonint do_hostname $cameraName
-
-# Wifi setup
-if [ ! -z $enableWifi ]
-then
-# Enable wifi country
-raspi-config nonint do_wifi_country $wifiCountryCode &> /dev/null
-
-# Set Wifi if pass any flag  to this script
-echo -en "\nnetwork={\n\tssid=\"$ssid\"\n\tpsk=\"$passphrase\"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
-fi
 
 # Update and install pip, uuid runtime
 apt-get update
