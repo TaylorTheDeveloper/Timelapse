@@ -15,7 +15,6 @@ locale=en_US.UTF-8
 layout=us
 enableSSH=0
 enableCamera=0
-useDatesInPath=True
 
 # Set keyboard layout and locale
 raspi-config nonint do_change_locale $locale &> /dev/null
@@ -45,7 +44,6 @@ echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraCloudUpdateFrequency='$cloudUpdateFrequency'\n" >> /root/.bashrc
-echo -en "export TimelapseUseDatesInPath ='$useDatesInPath'\n" >> /root/.bashrc
 
 if [[ -z "$TimelapseCameraDeviceId" ]]
 then
