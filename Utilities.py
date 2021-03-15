@@ -135,8 +135,8 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		changesRequireRestart = True
 
 	if changesRequireRestart:
-		# Note cronjobs will finish installing after reboot
-		os.system("reboot now")
+		# Note: 1) cronjobs will finish installing after reboot. 2) If running this from a cron job we need to access shutdown command with path.
+		os.system("/sbin/shutdown -r now")
 
 def BashUpdate(configLines, line, decoded, ckey, cvalue):
 	if (ckey in decoded and not cvalue in decoded):				
