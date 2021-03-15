@@ -25,7 +25,7 @@ if not captureSrcPath:
 	captureSrcPath = "./capture/"
 
 if not useDatesInPath:
-	useDatesInPath = False
+	useDatesInPath = True
 
 if not os.path.isdir(captureSrcPath):
 	os.mkdir(captureSrcPath)
