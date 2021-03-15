@@ -126,8 +126,8 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 			EnvUpdate(configLines, line, decoded, "TimelapseCameraCloudUpdateFrequency", config.cloudconfigupdatefrequency)
 			changesRequireRestart = True
 
-	with open("/etc/environment", "wb") as bashrc:
-		bashrc.writelines(configLines)
+	with open("/etc/environment", "wb") as envfile:
+		envfile.writelines(configLines)
 
 	if updateHostname:
 		hostcmd = "raspi-config nonint do_hostname " + config.cameraname
@@ -139,16 +139,22 @@ def InstallDeviceCloudConfiguration(deviceId, srcFolder="./"):
 		os.system("/sbin/shutdown -r now")
 
 def BashUpdate(configLines, line, decoded, ckey, cvalue):
-	if (ckey in decoded and not cvalue in decoded):				
-		idx = configLines.index(line)
-		eqlidx = decoded.index("=")
-		configLines[idx] = (decoded[:eqlidx + 1] + "\'" + cvalue +"\'\n").encode()
+	if (ckey in decoded and not cvalue in decoded):
+		try:
+			idx = configLines.index(line)
+			eqlidx = decoded.index("=")
+			configLines[idx] = (decoded[:eqlidx + 1] + "\'" + cvalue +"\'\n").encode()
+		except Exception:
+			pass
 
 def EnvUpdate(configLines, line, decoded, ckey, cvalue):
-	if (ckey in decoded and not cvalue in decoded):	
-		idx = configLines.index(line)
-		eqlidx = decoded.index("=")
-		configLines[idx] = (decoded[:eqlidx + 1] + cvalue +"\n").encode()
+	if (ckey in decoded and not cvalue in decoded):
+		try:
+			idx = configLines.index(line)
+			eqlidx = decoded.index("=")
+			configLines[idx] = (decoded[:eqlidx + 1] + cvalue +"\n").encode()
+		except Exception:
+			pass
 
 
 def SyncDeviceCloudConfiguration(metadataContainer, connectionString, deviceId, srcFolder="./"):
