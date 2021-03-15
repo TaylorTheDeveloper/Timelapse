@@ -8,7 +8,7 @@ Most steps have been automated. Follow the below steps on the device you wish to
 After installTimelapse.sh is complete, the camera will automatically snap and save pictures to azure for your timelapses whenever it has a power source. 
 
 ## Cloud Configuration
-The device will set itself up with a device id and create a device configuration in the cloud. Settings can be accessed via `CameraCloudConfiguration`.
+The device will set itself up with a device id and create a device configuration in the cloud. Available settings are in `CameraCloudConfiguration`.
 
 ## Full local setup:  
 `*Log in*`  
@@ -17,21 +17,8 @@ The device will set itself up with a device id and create a device configuration
 `mount /dev/sdb1 /media`  
 `cp -r /media/Timelapse ~`  
 `sed -i -e 's/\r$//' Timelapse/* # note (HOLD RIGHT ALT + "-") to get '\' if your model has en_GB keyboard layout.`  
-`./Timelapse/setup.sh usewifi`  
-`*Log in*`  
-`sudo -i`  
-`./Timelapse/installTimelapse.sh`  
-
-## Optionally if internet is already enabled on device:  
-`*Log in*`  
-`passwd pi # optional but recommend changing password`  
-`sudo -i`  
-`apt-get update`  
-`apt-get install git -y`  
-`git clone https://github.com/TaylorTheDeveloper/Timelapse`  
-`sed -i -e 's/\r$//' Timelapse/* # note (HOLD RIGHT ALT + "-") to get '\' if your model has en_GB keyboard layout.`  
 `./Timelapse/setup.sh`  
-`*Log in*`  
+`*Automatic reboot + manual log in*`  
 `sudo -i`  
 `./Timelapse/installTimelapse.sh`  
 
@@ -44,13 +31,14 @@ My raspberry pi's usually come with EN_GB as the default keyboard layout. It's v
 
 Environment variables were used in the setup. If you want to change the job frequency after setup has been complete, you will need to modify the root crontab. Use `sudo crontab -e`
 
-Often I work cross platform. Line endings may need to be fixed before you run the software. This is easily done in linux from the root of the project directory with "sed -i -e 's/\r$//' *"
+Line endings may need to be fixed before you run the software. This is easily done in linux from the root of the project directory with "sed -i -e 's/\r$//' *".
 
 Password update has not been automated:
 It's possible to do this but I don't recommend it: https://www.systutorials.com/changing-linux-users-password-in-one-command-line/
 You must be aware that the full command line can be viewed by all users in the Linux system and the password in the command line can be potentially leased. Only for cases where this is okay, you may consider using the method here.[source](https://www.systutorials.com/changing-linux-users-password-in-one-command-line/)
 
-There are other ways to acomplish timelapses using raspistill. I specifically didn't want my timelapse to be a long running process and wanted to implement it more like an 'agent' that wakes up and takes a picture from time to time, as 99% of the time I don't need to take a picture. Eventually, I will connect this to Azure IoT Hub or similar offering so that I can remotly configure, manage, and view the camera's output. I'll share progress here.
+There are other ways to acomplish timelapses using raspistill:
+I specifically didn't want my timelapse to be a long running process and wanted to implement it more like an 'agent' that wakes up and takes a picture from time to time, as 99% of the time I don't need to take a picture. I also want to be able to remotely manage the camera settings, which this software enables.
 
 Environment Variables:
 Required variables are set automatically for you. Other variables used by the software defined below. 

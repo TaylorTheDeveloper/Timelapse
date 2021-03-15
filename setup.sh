@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# Configuration
+# Network/Connection configuration
+azureStorageConnectionString=""
+enableWifi=1
 ssid=""
 passphrase=""
-azureStorageConnectionString=""
+wifiCountryCode=US
+
+# Device Configuration
 frequency="*/1 * * * *"
 cloudUpdateFrequency="*/5 * * * *"
-cameraName="timelapsecam1"
+cameraName="timelapsecam3"
 locale=en_US.UTF-8
 layout=us
 enableSSH=0
 enableCamera=0
-wifiCountryCode=US
-enableWifi=$1
+useDatesInPath=True
 
 # Set keyboard layout and locale
 raspi-config nonint do_change_locale $locale &> /dev/null
@@ -42,6 +45,7 @@ echo -en "export TimelapseCameraName='$cameraName'\n" >> /root/.bashrc
 echo -en "export TimelapseAzureStorage='$azureStorageConnectionString'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraFrequency='$frequency'\n" >> /root/.bashrc
 echo -en "export TimelapseCameraCloudUpdateFrequency='$cloudUpdateFrequency'\n" >> /root/.bashrc
+echo -en "export TimelapseUseDatesInPath ='$useDatesInPath'\n" >> /root/.bashrc
 
 if [[ -z "$TimelapseCameraDeviceId" ]]
 then
